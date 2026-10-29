@@ -5,10 +5,12 @@ export class ApiError extends Error {
   constructor(message: string, status: number) { super(message); this.status = status; }
 }
 
+const BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(path, { headers: { "Content-Type": "application/json" }, ...init });
+    res = await fetch(BASE + path, { headers: { "Content-Type": "application/json" }, ...init });
   } catch {
     throw new ApiError("Cannot reach the backend. Is it running on port 5000? (cd backend && python run.py)", 0);
   }
